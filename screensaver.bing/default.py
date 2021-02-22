@@ -15,6 +15,9 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with Bing ScreenSaver.  If not, see <http://www.gnu.org/licenses/>.
+#
+#
+#  Run through 2to3
 
 import gui
 import xbmcaddon
@@ -23,7 +26,7 @@ import xbmcaddon
 ADDON_ID       = 'screensaver.bing'
 REAL_SETTINGS  = xbmcaddon.Addon(id=ADDON_ID)
 ADDON_NAME     = REAL_SETTINGS.getAddonInfo('name')
-ADDON_PATH     = (REAL_SETTINGS.getAddonInfo('path').decode('utf-8'))
+ADDON_PATH     = (REAL_SETTINGS.getAddonInfo('path'))
 
 if __name__ == '__main__':
     ui = gui.GUI("default.xml", ADDON_PATH, "default")

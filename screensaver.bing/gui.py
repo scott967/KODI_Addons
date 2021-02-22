@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Bing ScreenSaver.  If not, see <http://www.gnu.org/licenses/>.
 
-import urllib, urllib2, socket, json, os, random
+import urllib.request, urllib.parse, urllib.error, urllib.request, urllib.error, urllib.parse, socket, json, os, random
 import xbmc, xbmcaddon, xbmcvfs, xbmcgui
 from simplecache import use_cache, SimpleCache
 
@@ -25,8 +25,8 @@ ADDON_ID       = 'screensaver.bing'
 REAL_SETTINGS  = xbmcaddon.Addon(id=ADDON_ID)
 ADDON_NAME     = REAL_SETTINGS.getAddonInfo('name')
 ADDON_VERSION  = REAL_SETTINGS.getAddonInfo('version')
-ADDON_PATH     = (REAL_SETTINGS.getAddonInfo('path').decode('utf-8'))
-SETTINGS_LOC   = REAL_SETTINGS.getAddonInfo('profile').decode('utf-8')
+ADDON_PATH     = (REAL_SETTINGS.getAddonInfo('path'))
+SETTINGS_LOC   = REAL_SETTINGS.getAddonInfo('profile')
 BASE_URL       = 'https://www.bing.com'
 POTD_JSON      = '/HPImageArchive.aspx?format=js&idx=0&n=8&mkt=en-US'
 KODI_MONITOR   = xbmc.Monitor()
@@ -73,16 +73,16 @@ class GUI(xbmcgui.WindowXMLDialog):
         self.close()
         
 
-    def uni(self, string, encoding='utf-8'):
-        if isinstance(string, basestring):
-            if not isinstance(string, unicode):
-               string = unicode(string, encoding)
+    def uni(self, string):
+        if isinstance(string, str):
+            if not isinstance(string, str):
+               string = str(string, encoding)
         return string
 
         
     def ascii(self, string):
-        if isinstance(string, basestring):
-            if isinstance(string, unicode):
+        if isinstance(string, str):
+            if isinstance(string, str):
                string = string.encode('ascii', 'ignore')
         return string
                 
@@ -99,11 +99,11 @@ class GUI(xbmcgui.WindowXMLDialog):
     @use_cache(1)
     def openURL(self, url):
         try:
-            request = urllib2.Request(url)
+            request = urllib.request.Request(url)
             request.add_header('User-Agent','Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11')
-            page = urllib2.urlopen(request, timeout = 15)
+            page = urllib.request.urlopen(request, timeout = 15)
             return self.loadJson(page.read())
-        except urllib2.URLError as e:
+        except urllib.error.URLError as e:
             self.log("openURL Failed! " + str(e), xbmc.LOGERROR)
         except socket.timeout as e:
             self.log("openURL Failed! " + str(e), xbmc.LOGERROR)
@@ -114,5 +114,7 @@ class GUI(xbmcgui.WindowXMLDialog):
         imageLST = []
         if 'images' in responce:
             for img in responce['images']:
-                imageLST.append(xbmcgui.ListItem(self.ascii(img['copyright']),thumbnailImage=(BASE_URL + img['url'])))
+                 litem = xbmcgui.ListItem(self.ascii(img['copyright']))
+                 litem.setArt({'thumb' : BASE_URL + img['url']})
+                 imageLST.append(litem)
         return imageLST

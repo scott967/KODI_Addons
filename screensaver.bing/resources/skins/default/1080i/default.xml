@@ -23,7 +23,7 @@
             <height>1080</height> 
             <scrolltime tween="sine" easing="out">200</scrolltime>
             <autoscroll>true</autoscroll>
-            <include>contentpanelslide</include>
+            <!-- <include>contentpanelslide</include> -->
             <itemlayout height="1080" width="1920">
                 <control type="image">
                     <posx>0</posx> 
